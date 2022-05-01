@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.810.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parsecini", "Parsecini\Parsecini.csproj", "{3207EAEE-A98C-4ECD-9EFB-F24B2BCAD513}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParseciniLibrary", "ParseciniLibrary\ParseciniLibrary.csproj", "{2DE20DC3-3907-46E1-86F3-94E16F7372D9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3207EAEE-A98C-4ECD-9EFB-F24B2BCAD513}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3207EAEE-A98C-4ECD-9EFB-F24B2BCAD513}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3207EAEE-A98C-4ECD-9EFB-F24B2BCAD513}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3207EAEE-A98C-4ECD-9EFB-F24B2BCAD513}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DE20DC3-3907-46E1-86F3-94E16F7372D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DE20DC3-3907-46E1-86F3-94E16F7372D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DE20DC3-3907-46E1-86F3-94E16F7372D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DE20DC3-3907-46E1-86F3-94E16F7372D9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5E3C5EDC-2F10-4EC9-B2AD-8C0B811539F8}
+	EndGlobalSection
+EndGlobal
