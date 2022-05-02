@@ -21,6 +21,8 @@ namespace Parsecini
             InputBuilder INPUT = new InputBuilder(programFlow);
             UIParts UI = new UIParts(Console.WindowWidth);
             TestSupport TESTSUPPORT = new TestSupport();
+            ThemeBuilder ThemeBuilder = new ThemeBuilder();
+
 
             TESTSUPPORT.WriteTestFile("test1", ".thm");
             TESTSUPPORT.WriteTestFile("test2", ".thm");
@@ -50,6 +52,7 @@ namespace Parsecini
                                 || string.IsNullOrWhiteSpace(inputDirectory)
                                 || string.IsNullOrWhiteSpace(outputDirectory)));
                         UI.DrawSelectOption(string.IsNullOrWhiteSpace(headerFilepath), "Enter 5 to quit.");
+
                         INPUT.MainMenuInput();
                         break;
                     case FlowPart.FlowPartType.SelectTheme:

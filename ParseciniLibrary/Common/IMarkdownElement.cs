@@ -3,9 +3,15 @@ namespace ParseciniLibrary.Common
 {
     public interface IMarkdownElement : IElement
     {
-        public string markdownSymbol { get; }
-        public string htmlSymbol { get; }
-        public void ParseTextFromMarkdown(string text);
-        public void OutputHtmlFromText(string text);
+        public string name { get; }
+        public string markdownOpenSymbol { get; }
+        public string markdownCloseSymbol { get; }
+        public string htmlOpenSymbol { get; }
+        public string htmlCloseSymbol { get; }
+
+        public string Content { get; set; }
+        public string ReturnAsHtml();
+        public string ReturnAsMarkdown();
+
     }
 }
