@@ -86,10 +86,10 @@ namespace ParseciniLibrary.Markdown
                 }
                 else
                 {
-                    return ((results1 == "true") ? "" : results1 + "; " + Environment.NewLine)
-                        + ((results2 == "true") ? "" : results2 + "; " + Environment.NewLine)
-                        + ((results3 == "true") ? "" : results3 + "; " + Environment.NewLine)
-                        + ((results4 == "true") ? "" : results4 + "; " + Environment.NewLine);
+                    return ((results1 == "true") ? "" : results1 + "; ")
+                        + ((results2 == "true") ? "" : results2 + "; ")
+                        + ((results3 == "true") ? "" : results3 + "; ")
+                        + ((results4 == "true") ? "" : results4 + "; ");
                 }
             }            
         }
@@ -101,7 +101,7 @@ namespace ParseciniLibrary.Markdown
                 return "true";
             }
             if (tag[0] != '<' || tag[tag.Length-1] != '>' || tag.Length < 3)
-                return "An HTML tag must being with an opening angled bracket '<' and end with a closing angled bracket '>' and have at least one character between them.";
+                return "An HTML tag must begin with an opening angled bracket '<' and end with a closing angled bracket '>' and have at least one character between them.";
             if(tag.Length < 4 && isClosingTag)
                 return "An closing HTML tag must being with an opening angled bracket and backslash '<\\' and end with a closing angled bracket '>' and have at least one character between them.";
             if (tag.Split('<').Length - 1 > 1 || tag.Split('>').Length - 1 > 1 || tag.Split('/').Length - 1 > 1)
