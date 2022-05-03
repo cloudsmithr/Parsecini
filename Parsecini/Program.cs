@@ -33,6 +33,8 @@ namespace Parsecini
             TESTSUPPORT.WriteTestDirectory("inputFolder");
             TESTSUPPORT.WriteTestDirectory("outputFolder");
 
+            ThemeBuilder.Process(dirPath + "/TestData/test01.mdt", ".mdt");
+
             while (programFlow.CurrentPart.myType != FlowPart.FlowPartType.Quit)
             {
                 string[] getDirectories = Directory.GetDirectories(dirPath);
@@ -260,6 +262,46 @@ namespace Parsecini
             {
                 Console.WriteLine(ex.ToString());
             }
+        }
+
+        public void WriteTestFileinTestDirectory(string directoryName, string fileName, string extension)
+        {
+            string path = Directory.GetCurrentDirectory() + "/" + directoryName;
+
+            try
+            {
+                // Determine whether the directory exists.
+                if (Directory.Exists(path))
+                {
+                    return;
+                }
+
+
+                DirectoryInfo di = Directory.CreateDirectory(path);
+
+                path = Directory.GetCurrentDirectory() + "/" + fileName + extension;
+
+                try
+                {
+                    // Create the file, or overwrite if the file exists.
+                    using (FileStream fs = File.Create(path))
+                    {
+                        byte[] info = new UTF8Encoding(true).GetBytes("This is some text in the file.");
+                        // Add some information to the file.
+                        fs.Write(info, 0, info.Length);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
         }
     }
 

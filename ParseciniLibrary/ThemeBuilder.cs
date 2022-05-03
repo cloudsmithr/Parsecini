@@ -17,17 +17,13 @@ namespace ParseciniLibrary
             IConfigurationBuilder builder = new ConfigurationBuilder();
             builder.AddJsonFile("appsettings.json", false, true);
             myConfig = builder.Build();
-
-            // We have our MarkdownElements loaded from the config.
-            MarkdownElement[] Elements = myConfig.GetSection("MarkdownElements").Get<MarkdownElement[]>();
         }
 
         public void Process(string path, string fileExtension)
         {
+            // We're using the passed-in file extension to tell the parser which files to parse.
             FileParser parser = new FileParser(fileExtension);
 
-            // 1. determine if we are processing a file or a directory
-            // we're passing in a parser so the user can decide what they want to be processing, and set up their own processing options on said parser
             if (Directory.Exists(path))
             {
                 // We dealing with a directory
@@ -50,7 +46,13 @@ namespace ParseciniLibrary
 
         private void ProcessFile(string filePath, FileParser fileParser)
         {
-            fileParser.ParseFile(filePath);
+            List<string> results = fileParser.ParseFile(filePath);
+
+            MarkdownReader markdownReader = new MarkdownReader(myConfig, "MarkdownElements");
+
+            MarkdownElement[] elements = markdownReader.ReadMarkdownElementsFromStringList(results);
+
+            Console.WriteLine(results);
         }
     }
 }
