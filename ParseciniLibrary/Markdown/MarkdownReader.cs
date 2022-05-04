@@ -91,7 +91,7 @@ namespace ParseciniLibrary.Markdown
                         + ((results3 == "true") ? "" : results3 + "; ")
                         + ((results4 == "true") ? "" : results4 + "; ");
                 }
-            }            
+            }
         }
 
         private string ValidateHTMLSymbol(string tag, bool isClosingTag = false)
