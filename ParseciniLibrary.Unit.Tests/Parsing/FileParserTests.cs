@@ -13,7 +13,7 @@ namespace ParseciniLibrary.Unit.Tests.Parsing
     public class FileParserTests
     {
         [TestMethod]
-        public void FileParsereConstructorSuccess()
+        public void FileParserConstructorSuccess()
         {
             FileParser testParser = new FileParser(".test");
             testParser.Should().NotBeNull();

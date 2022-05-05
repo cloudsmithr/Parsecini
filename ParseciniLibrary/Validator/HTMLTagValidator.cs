@@ -1,4 +1,6 @@
-﻿using ParseciniLibrary.Common;
+﻿using Dawn;
+using ParseciniLibrary.Common;
+using ParseciniLibrary.Common.Validator;
 using ParseciniLibrary.Logging;
 using System;
 using System.Collections.Generic;
@@ -8,29 +10,39 @@ using System.Threading.Tasks;
 
 namespace ParseciniLibrary.Validator
 {
-    public class HTMLTagValidator : IValidator<TagValidatorMethod>
+    public class HTMLTagValidator : IHTMLTagValidator
     {
-        public bool Validate(TagValidatorMethod tagValidatorMethod)
+        public bool Validate(TagValidatorMethod validationObject)
         {
-            string tag = tagValidatorMethod.tag;
-            bool isClosingTag = tagValidatorMethod.isClosingTag;
+            Guard.Argument(validationObject, nameof(validationObject)).NotNull();
+
+            string tag = validationObject.tag;
+            bool isClosingTag = validationObject.isClosingTag;
 
             bool valid = true;
 
-            if (tag[0] != '<' || tag[tag.Length - 1] != '>' || tag.Length < 3)
+            if(!string.IsNullOrWhiteSpace(tag))
             {
-                valid = false;
-                Log.LogFile("An HTML tag must begin with an opening angled bracket '<' and end with a closing angled bracket '>' and have at least one character between them.");
-            }
-            if (tag.Length < 4 && isClosingTag)
-            {
-                valid = false;
-                Log.LogFile("A closing HTML tag must being with an opening angled bracket and backslash '<\\' and end with a closing angled bracket '>' and have at least one character between them.");
-            }
-            if (tag.Split('<').Length - 1 > 1 || tag.Split('>').Length - 1 > 1 || tag.Split('/').Length - 1 > 1)
-            {
-                valid = false;
-                Log.LogFile("An HTML tag may not contain additional opening angled brackets '<' closing angled brackets '>' or forward slashes '/'.");
+                if (tag[0] != '<' || tag[tag.Length - 1] != '>' || tag.Length < 3)
+                {
+                    valid = false;
+                    Log.LogFile("An HTML tag must begin with an opening angled bracket '<' and end with a closing angled bracket '>' and have at least one character between them.");
+                }
+                if (tag.Length < 4 && isClosingTag)
+                {
+                    valid = false;
+                    Log.LogFile("A closing HTML tag must being with an opening angled bracket and forward slash '</' and end with a closing angled bracket '>' and have at least one character between them.");
+                }
+                if (tag.Split('<').Length - 1 > 1 || tag.Split('>').Length - 1 > 1 || tag.Split('/').Length - 1 > 1)
+                {
+                    valid = false;
+                    Log.LogFile("An HTML tag may not contain additional opening angled brackets '<' closing angled brackets '>' or forward slashes '/'.");
+                }
+                if (!isClosingTag && tag.Contains("/") && tag[tag.Length - 2] != '/')
+                {
+                    valid = false;
+                    Log.LogFile("An opening HTML tag may only contain a forward slash '/' immediately before the closing angled bracket '>' to indicate a self-closing opening tag.");
+                }
             }
 
             return valid;

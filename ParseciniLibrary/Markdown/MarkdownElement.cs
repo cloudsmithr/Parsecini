@@ -1,4 +1,5 @@
 ﻿using ParseciniLibrary.Common;
+using ParseciniLibrary.Common.Validator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ParseciniLibrary.Markdown
 {
-    public class MarkdownElement : IMarkdownElement
+    public class MarkdownElement : IMarkdownElement, IValidatorMethod
     {
         public string name { get; set;  }
         public string markdownOpenSymbol { get; set;  }

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ParseciniLibrary.Common
+namespace ParseciniLibrary.Common.Validator
 {
-    public interface IValidator<T>
+    public interface IValidatorMethod
     {
-        public bool Validate(T obj);
+
     }
 }
