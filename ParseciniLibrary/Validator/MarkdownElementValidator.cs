@@ -1,13 +1,8 @@
 ﻿using Dawn;
-using ParseciniLibrary.Common;
 using ParseciniLibrary.Common.Validator;
 using ParseciniLibrary.Logging;
 using ParseciniLibrary.Markdown;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ParseciniLibrary.Validator
 {
@@ -24,6 +19,8 @@ namespace ParseciniLibrary.Validator
 
         public bool Validate(MarkdownElement validationObject)
         {
+            Guard.Argument(validationObject, nameof(validationObject)).NotNull();
+
             bool valid = true;
 
             // This is what happens when you don't know REGEX, kids.

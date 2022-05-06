@@ -8,6 +8,7 @@ using ParseciniLibrary.Parsing;
 using System.IO;
 using ParseciniLibrary.Exceptions;
 using ParseciniLibrary.Validator;
+using ParseciniLibrary.Common.Parsing;
 
 namespace ParseciniLibrary
 {
@@ -29,8 +30,6 @@ namespace ParseciniLibrary
             Log.BeginLogging();
 
             // We're using the passed-in file extension to tell the parser which files to parse.
-            FileParser parser = new FileParser(fileExtension);
-
             if (Directory.Exists(path))
             {
                 // We dealing with a directory
@@ -39,7 +38,7 @@ namespace ParseciniLibrary
                 {
                     try
                     {
-                        ProcessFile(filename, parser);
+                        ProcessFile(filename);
                     }
                     catch (Exception ex)
                     {
@@ -52,7 +51,7 @@ namespace ParseciniLibrary
                 // We're dealing with a file
                 try
                 {
-                    ProcessFile(path, parser);
+                    ProcessFile(path);
                 }
                 catch (Exception ex)
                 {
@@ -67,15 +66,29 @@ namespace ParseciniLibrary
             Log.EndLogging();
         }
 
-        private void ProcessFile(string filePath, FileParser fileParser)
+        private void ProcessFile(string markdownFilePath)
         {
-            List<string> results = fileParser.ParseFile(filePath);
+            Log.LogFile($"Beginning to process file: {markdownFilePath}");
+
+            string markdownFileExtension = myConfig["FileSettings:MarkdownFileExtension"];
 
             MarkdownReader markdownReader = new MarkdownReader(myConfig, "MarkdownElements", new MarkdownElementValidator(new MarkdownTagValidator(), new HTMLTagValidator()));
 
-            MarkdownElement[] elements = markdownReader.ReadMarkdownElementsFromStringList(results);
+            FileParser markdownFileParser = new FileParser(markdownFileExtension);
+            IList<MarkdownElement> elements = ProcessObjectFile(markdownFilePath, markdownFileParser, markdownReader);
 
-            Console.WriteLine(results);
+            //ThemeReader themeReader = new ThemeReader(myConfig, "Theme", new ThemeValidator());
+            //IList<Themeelement> elements = ProcessObjectFile(filePath, fileParser, themeReader);
         }
+
+        private IList<T> ProcessObjectFile<T>(string filePath, ITextParser fileParser, IObjectReader<T> objectReader)
+        {
+            List<string> results = fileParser.ParseFile(filePath);
+
+            IList<T> readResults = objectReader.ReadObjectsFromStringList(results);
+
+            return readResults;
+        }
+
     }
 }

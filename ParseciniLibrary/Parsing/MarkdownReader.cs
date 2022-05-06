@@ -1,41 +1,43 @@
 ﻿using Microsoft.Extensions.Configuration;
+using ParseciniLibrary.Common.Parsing;
 using ParseciniLibrary.Common.Validator;
 using ParseciniLibrary.Exceptions;
 using ParseciniLibrary.Logging;
-using ParseciniLibrary.Validator;
-using System;
+using ParseciniLibrary.Markdown;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ParseciniLibrary.Markdown
+namespace ParseciniLibrary.Parsing
 {
-    public class MarkdownReader
+    public class MarkdownReader : IObjectReader<MarkdownElement>
     {
-        public MarkdownElement[] Elements;
+        public IList<MarkdownElement> _objects { get; set; }
+        public IMarkdownElementValidator markdownElementValidator;
+
         private Dictionary<string, MarkdownElement> MarkdownElementTags = new Dictionary<string, MarkdownElement>();
         private Dictionary<string, MarkdownElement> MarkdownElementSymbols = new Dictionary<string, MarkdownElement>();
-
-        public IMarkdownElementValidator markdownElementValidator;
+        
         public MarkdownReader(IConfigurationRoot myRoot, string configSection, IMarkdownElementValidator _markdownElementValidator)
         {
+            Log.LogFile("Building Markdownreader and validating Markdown config settings.");
             markdownElementValidator = _markdownElementValidator;
             ValidateMarkdownSettings(myRoot, configSection);
+            Log.LogFile("Markdown config settings validated.");
         }
 
-        public MarkdownElement[] ReadMarkdownElementsFromStringList(List<string> text)
+        public IList<MarkdownElement> ReadObjectsFromStringList(List<string> stringList)
         {
             bool isProcessingTag = false;
+
 
             return null;
         }
 
         private bool ValidateMarkdownSettings(IConfigurationRoot myRoot, string configSection)
         {
-            Elements = myRoot.GetSection(configSection).Get<MarkdownElement[]>();
+            _objects = myRoot.GetSection(configSection).Get<MarkdownElement[]>().ToList();
 
-            foreach (MarkdownElement element in Elements)
+            foreach (MarkdownElement element in _objects)
             {
                 if (markdownElementValidator.Validate(element))
                 {

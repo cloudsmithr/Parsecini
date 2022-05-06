@@ -1,12 +1,6 @@
 ﻿using Dawn;
-using ParseciniLibrary.Common;
 using ParseciniLibrary.Common.Validator;
 using ParseciniLibrary.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ParseciniLibrary.Validator
 {

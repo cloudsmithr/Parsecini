@@ -1,6 +1,7 @@
 ﻿using Dawn;
-using ParseciniLibrary.Common;
+using ParseciniLibrary.Common.Parsing;
 using ParseciniLibrary.Exceptions;
+using ParseciniLibrary.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,6 +13,8 @@ namespace ParseciniLibrary.Parsing
         public string fileExtension { get; set; } 
         public FileParser(string _fileExtension)
         {
+            Log.LogFile($"Building Fileparser for file extension {_fileExtension}");
+
             Guard.Argument(_fileExtension, nameof(_fileExtension)).NotNull().NotWhiteSpace();
 
             if (!_fileExtension.StartsWith('.'))
