@@ -172,6 +172,13 @@ namespace ParseciniLibrary.Unit.Tests.Validator
                         htmlOpenSymbol = "<h1>",
                         htmlCloseSymbol = "</h1>"
                     } },
+                   new object[] { new MarkdownElement()
+                    {
+                        markdownOpenSymbol = "+",
+                        markdownCloseSymbol = "-",
+                        htmlOpenSymbol = "<h1>",
+                        htmlCloseSymbol = "</h1>"
+                    } },
                     new object[] { new MarkdownElement()
                     {
                         markdownOpenSymbol = "[test]",
