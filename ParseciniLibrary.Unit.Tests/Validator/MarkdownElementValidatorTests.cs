@@ -21,12 +21,12 @@ namespace ParseciniLibrary.Unit.Tests.Validator
         public void MarkdownTagValidatorValidationSuccess(MarkdownElement markdownElement)
         {
             Mock<IMarkdownTagValidator> mockMarkdownTagValidator = new Mock<IMarkdownTagValidator>();
-            Mock<IHTMLTagValidator> mockHTMLTagValidator = new Mock<IHTMLTagValidator>();
+            Mock<IHTMLTagValidator> htmlTagValidator = new Mock<IHTMLTagValidator>();
 
-            mockHTMLTagValidator.Setup(x => x.Validate(It.IsAny<TagValidatorMethod>())).Returns(true);
-            mockMarkdownTagValidator.Setup(foo => foo.Validate(It.IsAny<TagValidatorMethod>())).Returns(true);
+            mockMarkdownTagValidator.Setup(x => x.Validate(It.IsAny<TagValidatorMethod>())).Returns(true);
+            htmlTagValidator.Setup(foo => foo.Validate(It.IsAny<TagValidatorMethod>())).Returns(true);
 
-            MarkdownElementValidator markdownElementValidator = new MarkdownElementValidator(mockMarkdownTagValidator.Object, mockHTMLTagValidator.Object);
+            MarkdownElementValidator markdownElementValidator = new MarkdownElementValidator(mockMarkdownTagValidator.Object, htmlTagValidator.Object);
             markdownElementValidator.Should().NotBeNull();
 
             markdownElementValidator.Validate(markdownElement).Should().Be(true, 
@@ -41,12 +41,12 @@ namespace ParseciniLibrary.Unit.Tests.Validator
         public void MarkdownTagValidatorValidationFailure(MarkdownElement markdownElement)
         {
             Mock<IMarkdownTagValidator> mockMarkdownTagValidator = new Mock<IMarkdownTagValidator>();
-            Mock<IHTMLTagValidator> mockHTMLTagValidator = new Mock<IHTMLTagValidator>();
+            Mock<IHTMLTagValidator> htmlTagValidator = new Mock<IHTMLTagValidator>();
 
             mockMarkdownTagValidator.Setup(x => x.Validate(It.IsAny<TagValidatorMethod>())).Returns(true);
-            mockHTMLTagValidator.Setup(x => x.Validate(It.IsAny<TagValidatorMethod>())).Returns(true);
+            htmlTagValidator.Setup(x => x.Validate(It.IsAny<TagValidatorMethod>())).Returns(true);
 
-            MarkdownElementValidator markdownElementValidator = new MarkdownElementValidator(mockMarkdownTagValidator.Object, mockHTMLTagValidator.Object);
+            MarkdownElementValidator markdownElementValidator = new MarkdownElementValidator(mockMarkdownTagValidator.Object, htmlTagValidator.Object);
             markdownElementValidator.Should().NotBeNull();
 
             markdownElementValidator.Validate(markdownElement).Should().Be(false,

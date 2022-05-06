@@ -14,9 +14,9 @@ namespace ParseciniLibrary.Unit.Tests.Validator
     {
         [TestMethod]
         [DynamicData(nameof(HTMLTagValidatorTestsData.HTMLTagValidatorValidationSuccess), typeof(HTMLTagValidatorTestsData))]
-        public void HTMLTagValidatorValidationSuccess(string htmlCloseSymbol, bool isCloseSymbol = false)
+        public void HTMLTagValidatorValidationSuccess(string htmlTag, bool isCloseSymbol = false)
         {
-            TagValidatorMethod tagValidatorMethod = new TagValidatorMethod(htmlCloseSymbol, isCloseSymbol);
+            TagValidatorMethod tagValidatorMethod = new TagValidatorMethod(htmlTag, isCloseSymbol);
             tagValidatorMethod.Should().NotBeNull();
 
             HTMLTagValidator htmlTagValidator = new HTMLTagValidator();
