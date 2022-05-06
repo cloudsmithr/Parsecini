@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ParseciniLibrary.Validator
 {
-    public class MarkdownElementValidator : IValidator<MarkdownElement>
+    public class MarkdownElementValidator : IMarkdownElementValidator
     {
         private IMarkdownTagValidator markdownTagValidator;
         private IHTMLTagValidator htmlTagValidator;

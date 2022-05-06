@@ -7,6 +7,7 @@ using ParseciniLibrary.Logging;
 using ParseciniLibrary.Parsing;
 using System.IO;
 using ParseciniLibrary.Exceptions;
+using ParseciniLibrary.Validator;
 
 namespace ParseciniLibrary
 {
@@ -70,7 +71,7 @@ namespace ParseciniLibrary
         {
             List<string> results = fileParser.ParseFile(filePath);
 
-            MarkdownReader markdownReader = new MarkdownReader(myConfig, "MarkdownElements");
+            MarkdownReader markdownReader = new MarkdownReader(myConfig, "MarkdownElements", new MarkdownElementValidator(new MarkdownTagValidator(), new HTMLTagValidator()));
 
             MarkdownElement[] elements = markdownReader.ReadMarkdownElementsFromStringList(results);
 
