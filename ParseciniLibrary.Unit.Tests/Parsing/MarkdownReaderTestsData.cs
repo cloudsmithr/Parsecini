@@ -46,6 +46,25 @@ namespace ParseciniLibrary.Unit.Tests.Parsing
                             }
                         }
                     },
+                    new object[] {
+                        "checking empty simple header",
+                        new List<string>
+                        {
+                            "#",
+                        },
+                        new List<MarkdownElement>
+                        {
+                            new MarkdownElement
+                            {
+                                name = "Header1",
+                                markdownOpenSymbol = "#",
+                                markdownCloseSymbol = "",
+                                htmlOpenSymbol = "<h1>",
+                                htmlCloseSymbol = "</h1>",
+                                Content = ""
+                            }
+                        }
+                    },
 
                     new object[] {
                         "checking simple text tag block",
@@ -67,6 +86,27 @@ namespace ParseciniLibrary.Unit.Tests.Parsing
                                 htmlOpenSymbol = "<p>",
                                 htmlCloseSymbol = "</p>",
                                 Content = "The end had to come.It's the truth you've always known.Time."
+                            }
+                        }
+                    },
+
+                    new object[] {
+                        "checking empty simple text tag block",
+                        new List<string>
+                        {
+                            "[text]",
+                            "[/text]"
+                        },
+                        new List<MarkdownElement>
+                        {
+                            new MarkdownElement
+                            {
+                                name = "Paragraph1",
+                                markdownOpenSymbol = "[text]",
+                                markdownCloseSymbol = "[/text]",
+                                htmlOpenSymbol = "<p>",
+                                htmlCloseSymbol = "</p>",
+                                Content = ""
                             }
                         }
                     },
