@@ -6,6 +6,7 @@ using ParseciniLibrary.Markdown;
 
 namespace ParseciniLibrary.Validator
 {
+    // A class for validating a MarkdownElement.
     public class MarkdownElementValidator : IMarkdownElementValidator
     {
         private IMarkdownTagValidator markdownTagValidator;

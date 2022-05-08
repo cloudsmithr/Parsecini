@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ParseciniLibrary.Validator
 {
+    // A class for storing information needed to validate a Tag (ie Markdown or HTML tag).
     public class TagValidatorMethod : IValidatorMethod
     {
         public string tag { get; set; }

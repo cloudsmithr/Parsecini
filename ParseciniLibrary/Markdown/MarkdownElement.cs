@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ParseciniLibrary.Markdown
 {
-    public class MarkdownElement : IMarkdownElement, IValidatorMethod
+    public class MarkdownElement : IMarkdownElement, IValidatorMethod, ICloneable<MarkdownElement>
     {
         public string name { get; set;  }
         public string markdownOpenSymbol { get; set;  }
@@ -25,6 +25,19 @@ namespace ParseciniLibrary.Markdown
         public string ReturnAsMarkdown()
         {
             return "";
+        }
+
+        public MarkdownElement Clone()
+        {
+            MarkdownElement element = new MarkdownElement();
+            element.name = name;
+            element.markdownOpenSymbol = markdownOpenSymbol;
+            element.markdownCloseSymbol = markdownCloseSymbol;
+            element.htmlOpenSymbol = htmlOpenSymbol;
+            element.htmlCloseSymbol = htmlCloseSymbol;
+            element.Content = Content;
+
+            return element;
         }
     }
 }

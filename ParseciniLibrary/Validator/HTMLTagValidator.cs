@@ -4,6 +4,7 @@ using ParseciniLibrary.Logging;
 
 namespace ParseciniLibrary.Validator
 {
+    // A class for validating an HTML tag.
     public class HTMLTagValidator : IHTMLTagValidator
     {
         public bool Validate(TagValidatorMethod validationObject)

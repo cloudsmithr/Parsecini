@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace ParseciniLibrary.Validator
 {
+    // A class for validating a Markdown tag.
     public class MarkdownTagValidator : IMarkdownTagValidator
     {
         public bool Validate(TagValidatorMethod markdownValidatorMethod)
