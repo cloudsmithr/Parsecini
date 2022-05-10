@@ -1,4 +1,4 @@
-﻿using ParseciniLibrary.Markdown;
+﻿using ParseciniLibrary.Elements;
 
 namespace ParseciniLibrary.Common.Validator
 {

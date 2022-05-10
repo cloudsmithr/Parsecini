@@ -4,7 +4,7 @@ using ParseciniLibrary.Common.Parsing;
 using ParseciniLibrary.Common.Validator;
 using ParseciniLibrary.Exceptions;
 using ParseciniLibrary.Logging;
-using ParseciniLibrary.Markdown;
+using ParseciniLibrary.Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ using System.Text;
 namespace ParseciniLibrary.Parsing
 {
     // A class for constructing a list of MarkdownElements out of a list of strings.
-    public class MarkdownReader : IObjectReader<MarkdownElement>
+    public class MarkdownReader : IObjectListReader<MarkdownElement>
     {
         public IList<MarkdownElement> _objects { get; set; }
         public IMarkdownElementValidator markdownElementValidator;

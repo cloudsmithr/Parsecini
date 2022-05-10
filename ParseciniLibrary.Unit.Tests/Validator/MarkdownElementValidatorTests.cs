@@ -4,7 +4,7 @@ using Moq;
 using ParseciniLibrary.Common;
 using ParseciniLibrary.Common.Validator;
 using ParseciniLibrary.Exceptions;
-using ParseciniLibrary.Markdown;
+using ParseciniLibrary.Elements;
 using ParseciniLibrary.Validator;
 using System;
 using System.Collections.Generic;

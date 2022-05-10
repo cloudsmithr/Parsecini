@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using ParseciniLibrary.Markdown;
+using ParseciniLibrary.Elements;
 using System;
 using System.Collections.Generic;
 using ParseciniLibrary.Common;
@@ -75,7 +75,7 @@ namespace ParseciniLibrary
             MarkdownReader markdownReader = new MarkdownReader(myConfig, "MarkdownElements", new MarkdownElementValidator(new MarkdownTagValidator(), new HTMLTagValidator()));
 
             FileParser markdownFileParser = new FileParser(markdownFileExtension);
-            IList<MarkdownElement> elements = ProcessObjectFile(markdownFilePath, markdownFileParser, markdownReader);
+            IList<MarkdownElement> elements = ProcessObjectListFile(markdownFilePath, markdownFileParser, markdownReader);
 
             // Now that we have the Markdown read in, we need to read in the rest of the theme information
             // Actually, this should probably be done on Initialization, so that the header / theme file etc. are only loaded once
@@ -85,7 +85,7 @@ namespace ParseciniLibrary
             //IList<Themeelement> elements = ProcessObjectFile(filePath, fileParser, themeReader);
         }
 
-        private IList<T> ProcessObjectFile<T>(string filePath, ITextParser fileParser, IObjectReader<T> objectReader)
+        private IList<T> ProcessObjectListFile<T>(string filePath, ITextParser fileParser, IObjectListReader<T> objectReader)
         {
             List<string> results = fileParser.ParseFile(filePath);
 

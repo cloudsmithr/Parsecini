@@ -23,6 +23,13 @@ namespace ParseciniLibrary.Parsing
             fileExtension = _fileExtension;
         }
 
+        public string ParseFile(string filePath, string lineJoinString)
+        {
+            Guard.Argument(filePath, nameof(filePath)).NotNull().NotWhiteSpace();
+            Guard.Argument(lineJoinString, nameof(lineJoinString)).NotNull().NotWhiteSpace();
+            return String.Join(lineJoinString, ParseFile(filePath));
+        }
+
         public List<string> ParseFile(string filePath)
         {
             Guard.Argument(filePath, nameof(filePath)).NotNull().NotWhiteSpace();

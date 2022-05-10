@@ -1,12 +1,13 @@
 ﻿using ParseciniLibrary.Common;
 using ParseciniLibrary.Common.Validator;
+using ParseciniLibrary.Common.Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ParseciniLibrary.Markdown
+namespace ParseciniLibrary.Elements
 {
     public class MarkdownElement : IMarkdownElement, IValidatorMethod, ICloneable<MarkdownElement>
     {

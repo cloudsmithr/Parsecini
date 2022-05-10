@@ -1,7 +1,7 @@
 ﻿using Dawn;
 using ParseciniLibrary.Common.Validator;
 using ParseciniLibrary.Logging;
-using ParseciniLibrary.Markdown;
+using ParseciniLibrary.Elements;
 
 
 namespace ParseciniLibrary.Validator

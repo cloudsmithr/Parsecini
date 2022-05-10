@@ -1,5 +1,5 @@
 ﻿using System;
-namespace ParseciniLibrary.Common
+namespace ParseciniLibrary.Common.Elements
 {
     public interface IMarkdownElement : IElement
     {

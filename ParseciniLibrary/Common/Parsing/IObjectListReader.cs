@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ParseciniLibrary.Common.Parsing
 {
-    public interface IObjectReader<T>
+    public interface IObjectListReader<T>
     {
-        public T _object { get; set; }
-        public T ReadObjectFromString(string str);
+        public IList<T> _objects { get; set; }
+        public IList<T> ReadObjectsFromStringList(List<string> stringList);
     }
 }
