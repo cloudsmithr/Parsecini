@@ -39,45 +39,18 @@ namespace ParseciniLibrary.Parsing
                 IList<string> extractedStrings = str.Split("(tpl)", StringSplitOptions.RemoveEmptyEntries).ToList().Where(x => x[0] == '[').ToList();
                 foreach (string s in extractedStrings)
                 {
-                    string originalFileNameSubString = s.Split(']')[0];
+                    // split at the closing bracket
+                    string fileNameSubString = s.Split(']')[0];
+                    // Remove opening bracket
+                    fileNameSubString = fileNameSubString.Remove(0, 1);
 
-                    // Let's just strip out all of these characters that a user might have put at the beginning of the template path
-                    while (s.Length > 0)
-                    {
-                        if (s[0] == '[' || s[0] == '.' || s[0] == '/' || s[0] == '\\' || s[0] == ' ' || s[0] == '\n' || s[0] == '\r' || s[0] == '\'' || s[0] == '\"')
-                            s.Remove(0, 1);
-                        else
-                            break;
-                    }
-
-                    // A valid result will have at least x.tpl] as characters. Anything less than this won't be valid.
-                    if(s.Length < 6 || string.IsNullOrEmpty(s))
+                    // A valid result will have at least x.tpl as characters. Anything less than this won't be valid.
+                    if (fileNameSubString.Length < 5 || string.IsNullOrEmpty(fileNameSubString))
                     {
                         throw new TemplateReaderException("Invalid filename.");
                     }
 
-                    // We split the string again on the closing bracket, taking only the first substring since that will be our filename.
-                    string fileNameSubString = s.Split(']')[0];
-
-                    if (fileNameSubString != originalFileNameSubString)
-                    {
-                        throw new TemplateReaderException($"Invalid format, please correct it from [{originalFileNameSubString}] to: [{fileNameSubString}]");
-                    }
-
-                    while (fileNameSubString.Length > 0)
-                    {
-                        char lastCharacter = fileNameSubString[fileNameSubString.Length - 1];
-                        if (lastCharacter == '[' || lastCharacter == '.' ||
-                            lastCharacter == '/' || lastCharacter == '\\' ||
-                            lastCharacter == ' ' || lastCharacter == '\n' ||
-                            lastCharacter == '\r' || lastCharacter == '\'' ||
-                            lastCharacter == '\"')
-                            fileNameSubString.Remove(fileNameSubString.Length - 1, 1);
-                        else
-                            break;
-                    }
-
-                    if (fileNameSubString.Substring(fileNameSubString.Length - 4) != ".tpl")
+                    if (new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), fileNameSubString)).Extension != ".tpl")
                     {
                         throw new TemplateReaderException("Invalid filename, file extension must be '.tpl'.");
                     }
