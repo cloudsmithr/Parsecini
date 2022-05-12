@@ -2,9 +2,10 @@
 using Microsoft.Extensions.Configuration;
 using ParseciniLibrary.Common.Parsing;
 using ParseciniLibrary.Common.Validator;
+using ParseciniLibrary.Elements;
 using ParseciniLibrary.Exceptions;
 using ParseciniLibrary.Logging;
-using ParseciniLibrary.Elements;
+using ParseciniLibrary.Parsing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,23 +18,82 @@ namespace ParseciniLibrary.Parsing
     public class TemplateReader : IObjectReader<Template>
     {
         public Template _object { get; set; }
+        private ITextParser textParser { get; }
+        private ITemplateValidator templateValidator { get; }
 
-        public TemplateReader(ITemplateValidator templateValidator)
+        public TemplateReader(ITemplateValidator _templateValidator, ITextParser _textParser)
         {
+            Guard.Argument(_templateValidator, nameof(_templateValidator)).NotNull();
+            Guard.Argument(_textParser, nameof(_textParser)).NotNull();
 
+            textParser = _textParser;
+            templateValidator = _templateValidator;
         }
 
-        // Pass in the relative path to the root template file
+        // Pass in the path to the root template file
         public Template ReadObjectFromString(string str)
         {
-            return null;
+            ReadTemplateElementsRecursively(str, str);
+            return _object;
         }
 
-        private IList<string> ReadTemplatePathsFromStringList(List<string> stringList)
+        private void ReadTemplateElementsRecursively(string filePath, string originalFile)
+        {
+            if (filePath.Contains(Directory.GetCurrentDirectory()))
+                filePath = Path.GetRelativePath(Directory.GetCurrentDirectory(), filePath);
+
+            List<string> templateLines = new List<string>();
+
+            // If something goes wrong while reading in the file we need to be sure to tell the user what template has the problem.
+            try
+            {
+                templateLines = textParser.ParseFile(filePath);
+            }
+            catch (Exception ex)
+            {
+                throw new TemplateReaderException($"Encountered file parsing error in the template file {originalFile}. Could not parse file path {filePath}", ex);
+            }
+
+            // Make sure the template isn't referencing itself
+            foreach (string line in templateLines)
+            {
+                if(line.Contains(filePath))
+                {
+                    throw new TemplateReaderException($"Self-reference detected in {filePath}.");
+                }
+            }
+
+            // If we haven't already added this template to the Template _object, we need to add it and search it for children.
+            // If it's already in the list we don't have to do anything.
+            if (!(_object is object) || !_object.TemplateElements.ContainsKey(filePath))
+            {
+                TemplateElement templateElement = new TemplateElement()
+                { FilePath = filePath, Content = textParser.JoinString(Environment.NewLine, templateLines) };
+
+                if (!(_object is object))
+                    _object = new Template(templateElement);
+                else
+                    _object.TemplateElements.Add(filePath, templateElement);
+
+                IList<string> getChildren = ReadTemplatePathsFromStringList(templateLines, filePath);
+
+                // If we have children, we have to go through them recursively as well.
+                if(getChildren.Count > 0)
+                {
+                    foreach(string childTemplate in getChildren)
+                    {
+                        ReadTemplateElementsRecursively(childTemplate, filePath);
+                    }
+                }
+            }
+        }
+
+        private IList<string> ReadTemplatePathsFromStringList(List<string> stringList, string filePath)
         {
             List<string> results = new List<string>();
+            string fileDirectory = Path.GetDirectoryName(filePath);
 
-            foreach(string str in stringList)
+            foreach (string str in stringList)
             {
                 // Splitting the line by the (tpl) strings and only grabbing the ones that start with an opening bracket [
                 IList<string> extractedStrings = str.Split("(tpl)", StringSplitOptions.RemoveEmptyEntries).ToList().Where(x => x[0] == '[').ToList();
@@ -44,21 +104,30 @@ namespace ParseciniLibrary.Parsing
                     // Remove opening bracket
                     fileNameSubString = fileNameSubString.Remove(0, 1);
 
+                    // strip out any leading back or forward slashes
+                    while (fileNameSubString.Length > 0 && (fileNameSubString[0] == '\\' || fileNameSubString[0] == '/'))
+                        fileNameSubString = fileNameSubString.Remove(0, 1);
+
                     // A valid result will have at least x.tpl as characters. Anything less than this won't be valid.
                     if (fileNameSubString.Length < 5 || string.IsNullOrEmpty(fileNameSubString))
                     {
-                        throw new TemplateReaderException("Invalid filename.");
+                        throw new TemplateReaderException($"Invalid filename {fileNameSubString} in {filePath}.");
                     }
 
-                    if (new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), fileNameSubString)).Extension != ".tpl")
+                    if (!fileNameSubString.Contains(fileDirectory))
+                        fileNameSubString = Path.Join(fileDirectory, fileNameSubString);
+
+                    string fullFilePath = Path.Join(Directory.GetCurrentDirectory(), fileNameSubString);
+
+                    if (new FileInfo(fullFilePath).Extension != ".tpl")
                     {
-                        throw new TemplateReaderException("Invalid filename, file extension must be '.tpl'.");
+                        throw new TemplateReaderException($"Invalid filename {fullFilePath} in {filePath}, file extension must be '.tpl'.");
                     }
 
-                    if (File.Exists(Path.Combine(Directory.GetCurrentDirectory(), fileNameSubString)))
+                    if (File.Exists(fullFilePath))
                         results.Add(fileNameSubString);
                     else
-                        throw new TemplateReaderException("Could not find the file specified.");
+                        throw new TemplateReaderException($"Could not find the template file {fullFilePath}, linked in {filePath}.");
                 }
             }
 

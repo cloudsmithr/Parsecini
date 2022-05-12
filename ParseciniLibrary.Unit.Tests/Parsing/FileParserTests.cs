@@ -61,9 +61,19 @@ namespace ParseciniLibrary.Unit.Tests.Parsing
         }
 
         [TestMethod]
-        public void FileParserParseFileSuccess()
+        public void FileParserParseFileSuccessAbsolutePath()
         {
             string dirPath = Directory.GetCurrentDirectory() + "/TestData/test01.mdt";
+            FileParser fileParser = new FileParser("mdt");
+
+            List<string> results = fileParser.ParseFile(dirPath);
+            results.Should().BeEquivalentTo(testFileEquivalent);
+        }
+
+        [TestMethod]
+        public void FileParserParseFileSuccessRelativePath()
+        {
+            string dirPath = "/TestData/test01.mdt";
             FileParser fileParser = new FileParser("mdt");
 
             List<string> results = fileParser.ParseFile(dirPath);

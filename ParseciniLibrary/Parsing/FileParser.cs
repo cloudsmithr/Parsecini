@@ -11,6 +11,7 @@ namespace ParseciniLibrary.Parsing
     public class FileParser : ITextParser
     {
         public string fileExtension { get; set; } 
+
         public FileParser(string _fileExtension)
         {
             Log.LogFile($"Building Fileparser for file extension {_fileExtension}");
@@ -23,16 +24,30 @@ namespace ParseciniLibrary.Parsing
             fileExtension = _fileExtension;
         }
 
-        public string ParseFile(string filePath, string lineJoinString)
+        public string ParseFile(string filePath, string separator)
         {
             Guard.Argument(filePath, nameof(filePath)).NotNull().NotWhiteSpace();
-            Guard.Argument(lineJoinString, nameof(lineJoinString)).NotNull().NotWhiteSpace();
-            return String.Join(lineJoinString, ParseFile(filePath));
+            Guard.Argument(separator, nameof(separator)).NotNull().NotWhiteSpace();
+
+            return JoinString(separator, ParseFile(filePath));
+        }
+
+        public string JoinString(string separator, IList<string> stringList)
+        {
+            return String.Join(separator, stringList);
         }
 
         public List<string> ParseFile(string filePath)
         {
             Guard.Argument(filePath, nameof(filePath)).NotNull().NotWhiteSpace();
+
+            // This lets us take in relative and absolute paths
+            // An absolute path will contain the same root directory as the application
+            // This means this library won't be able to point to other drives or particians, but it's really meant to
+            // be used in the same folder as the templates and output, anyways.
+            string rootDirectory = Directory.GetDirectoryRoot(Directory.GetCurrentDirectory());
+            if (!filePath.Contains(rootDirectory))
+                filePath = Path.Join(Directory.GetCurrentDirectory(), filePath);
 
             if (File.Exists(filePath))
             {

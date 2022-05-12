@@ -15,6 +15,7 @@ namespace ParseciniLibrary.Templating
 
         public Template(TemplateElement rootTemplate)
         {
+            TemplateElements = new Dictionary<string, TemplateElement>();
             TemplateElements.Add(rootTemplate.FilePath, rootTemplate);
         }
     }
