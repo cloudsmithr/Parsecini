@@ -1,0 +1,1 @@
+﻿(tpl)[/fakeTemplate.tpl]

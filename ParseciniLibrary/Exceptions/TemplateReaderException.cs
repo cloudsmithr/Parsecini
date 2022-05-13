@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ParseciniLibrary.Exceptions
 {
-    internal class TemplateReaderException : Exception
+    public class TemplateReaderException : Exception
     {
         public TemplateReaderException(string message)
     : base(message)

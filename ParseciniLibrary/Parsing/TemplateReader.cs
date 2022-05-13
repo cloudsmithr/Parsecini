@@ -20,21 +20,28 @@ namespace ParseciniLibrary.Parsing
         public Template _object { get; set; }
         private ITextParser textParser { get; }
         private ITemplateValidator templateValidator { get; }
+        private string templateFileExtension;
 
-        public TemplateReader(ITemplateValidator _templateValidator, ITextParser _textParser)
+        public TemplateReader(ITemplateValidator _templateValidator, ITextParser _textParser, string _templateFileExtension)
         {
             Guard.Argument(_templateValidator, nameof(_templateValidator)).NotNull();
             Guard.Argument(_textParser, nameof(_textParser)).NotNull();
+            Guard.Argument(_templateFileExtension, nameof(_templateFileExtension)).NotNull().NotWhiteSpace();
 
             textParser = _textParser;
             templateValidator = _templateValidator;
+            templateFileExtension = _templateFileExtension.Replace(".", string.Empty);
         }
 
         // Pass in the path to the root template file
         public Template ReadObjectFromString(string str)
         {
             ReadTemplateElementsRecursively(str, str);
-            return _object;
+
+            if (templateValidator.Validate(_object))
+                return _object;
+            else
+                throw new TemplateReaderException("");
         }
 
         private void ReadTemplateElementsRecursively(string filePath, string originalFile)
@@ -95,8 +102,8 @@ namespace ParseciniLibrary.Parsing
 
             foreach (string str in stringList)
             {
-                // Splitting the line by the (tpl) strings and only grabbing the ones that start with an opening bracket [
-                IList<string> extractedStrings = str.Split("(tpl)", StringSplitOptions.RemoveEmptyEntries).ToList().Where(x => x[0] == '[').ToList();
+                // Splitting the line by the ({templateFileExtension}) strings and only grabbing the ones that start with an opening bracket [
+                IList<string> extractedStrings = str.Split($"({templateFileExtension})", StringSplitOptions.RemoveEmptyEntries).ToList().Where(x => x[0] == '[').ToList();
                 foreach (string s in extractedStrings)
                 {
                     // split at the closing bracket
@@ -108,8 +115,8 @@ namespace ParseciniLibrary.Parsing
                     while (fileNameSubString.Length > 0 && (fileNameSubString[0] == '\\' || fileNameSubString[0] == '/'))
                         fileNameSubString = fileNameSubString.Remove(0, 1);
 
-                    // A valid result will have at least x.tpl as characters. Anything less than this won't be valid.
-                    if (fileNameSubString.Length < 5 || string.IsNullOrEmpty(fileNameSubString))
+                    // A valid result will have at least x.{fileExtension} as characters. Anything less than this won't be valid.
+                    if (fileNameSubString.Length < 2 + templateFileExtension.Length || string.IsNullOrEmpty(fileNameSubString))
                     {
                         throw new TemplateReaderException($"Invalid filename {fileNameSubString} in {filePath}.");
                     }
@@ -119,9 +126,9 @@ namespace ParseciniLibrary.Parsing
 
                     string fullFilePath = Path.Join(Directory.GetCurrentDirectory(), fileNameSubString);
 
-                    if (new FileInfo(fullFilePath).Extension != ".tpl")
+                    if (new FileInfo(fullFilePath).Extension != $".{templateFileExtension}")
                     {
-                        throw new TemplateReaderException($"Invalid filename {fullFilePath} in {filePath}, file extension must be '.tpl'.");
+                        throw new TemplateReaderException($"Invalid filename {fullFilePath} in {filePath}, file extension must be '.{templateFileExtension}'.");
                     }
 
                     if (File.Exists(fullFilePath))

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ParseciniLibrary.Unit.Tests.Validator
+namespace ParseciniLibrary.Validator
 {
     public class TemplateValidator : ITemplateValidator
     {

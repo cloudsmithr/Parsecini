@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using ParseciniLibrary.Common;
 using ParseciniLibrary.Logging;
 using ParseciniLibrary.Parsing;
+using ParseciniLibrary.Templating;
 using System.IO;
 using ParseciniLibrary.Exceptions;
 using ParseciniLibrary.Validator;
@@ -15,6 +16,7 @@ namespace ParseciniLibrary
     public class ThemeBuilder
     {
         public IConfigurationRoot myConfig { get; }
+        private Template Template;
         public ThemeBuilder()
         {
             IConfigurationBuilder builder = new ConfigurationBuilder();
@@ -23,6 +25,31 @@ namespace ParseciniLibrary
 
             Log.LogPath = Path.Combine(Directory.GetCurrentDirectory(), myConfig["LogSettings:LogFolder"]);
             Log.LogFileName = myConfig["LogSettings:LogFileName"];
+        }
+
+        public void SetTemplate(string rootTemplatePath)
+        {
+            Log.BeginLogging();
+
+            Log.EndLogging();
+
+            if (File.Exists(rootTemplatePath))
+            {
+                try
+                {
+                    ProcessTemplateFile(rootTemplatePath);
+                }
+                catch (Exception ex)
+                {
+                    Log.LogFile(ex.ToString());
+                }
+            }
+            else
+            {
+                Log.EndLogging();
+                throw new ThemeBuilderException("Could not find any files with the requested file extension at the given path.");
+            }
+            Log.EndLogging();
         }
 
         public void Process(string path, string fileExtension)
@@ -38,7 +65,7 @@ namespace ParseciniLibrary
                 {
                     try
                     {
-                        ProcessFile(filename);
+                        ProcessMarkdownFile(filename);
                     }
                     catch (Exception ex)
                     {
@@ -51,7 +78,7 @@ namespace ParseciniLibrary
                 // We're dealing with a file
                 try
                 {
-                    ProcessFile(path);
+                    ProcessMarkdownFile(path);
                 }
                 catch (Exception ex)
                 {
@@ -66,8 +93,21 @@ namespace ParseciniLibrary
             Log.EndLogging();
         }
 
-        private void ProcessFile(string markdownFilePath)
+        private void ProcessTemplateFile(string templateFilePath)
         {
+            Log.LogFile($"Beginning to process file: {templateFilePath}");
+
+            string templateFileExtension = myConfig["FileSettings:TemplateFileExtension"];
+
+            TemplateReader templateReader = new TemplateReader(new TemplateValidator(), new FileParser(templateFileExtension), templateFileExtension);
+            Template = templateReader.ReadObjectFromString(templateFilePath);
+        }
+
+        private void ProcessMarkdownFile(string markdownFilePath)
+        {
+            if (Template == null)
+                throw new Exception("Cannot process a MarkdownFile without a valid Template set.");
+
             Log.LogFile($"Beginning to process file: {markdownFilePath}");
 
             string markdownFileExtension = myConfig["FileSettings:MarkdownFileExtension"];
@@ -77,12 +117,7 @@ namespace ParseciniLibrary
             FileParser markdownFileParser = new FileParser(markdownFileExtension);
             IList<MarkdownElement> elements = ProcessObjectListFile(markdownFilePath, markdownFileParser, markdownReader);
 
-            // Now that we have the Markdown read in, we need to read in the rest of the theme information
-            // Actually, this should probably be done on Initialization, so that the header / theme file etc. are only loaded once
-            // and then applied to each Markdown file.
-
-            //ThemeReader themeReader = new ThemeReader(myConfig, "Theme", new ThemeValidator());
-            //IList<Themeelement> elements = ProcessObjectFile(filePath, fileParser, themeReader);
+            // Need to continue here, merging the Template and the markdownfile(s), and writing them to the output folder
         }
 
         private IList<T> ProcessObjectListFile<T>(string filePath, ITextParser fileParser, IObjectListReader<T> objectReader)
