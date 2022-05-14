@@ -1,1 +1,1 @@
-﻿(tpl)[/fakeTemplate.tpm]
+﻿(tpl)[fakeTemplate.tpm]

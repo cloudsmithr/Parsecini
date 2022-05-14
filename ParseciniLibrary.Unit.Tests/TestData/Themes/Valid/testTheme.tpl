@@ -1,1 +1,1 @@
-(tpl)[/headerTemplate.tpl](tpl)[/bodyTemplate.tpl]
+(tpl)[headerTemplate.tpl](tpl)[bodyTemplate.tpl]

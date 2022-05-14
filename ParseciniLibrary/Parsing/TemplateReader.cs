@@ -33,28 +33,49 @@ namespace ParseciniLibrary.Parsing
             templateFileExtension = _templateFileExtension.Replace(".", string.Empty);
         }
 
-        // Pass in the path to the root template file
+        // Pass in the ABSOLUTE path to the root template file
         public Template ReadObjectFromString(string str)
         {
-            ReadTemplateElementsRecursively(str, str);
+            List<string> templateLines;
 
-            if (templateValidator.Validate(_object))
+            try
+            {
+                templateLines = textParser.ParseFile(str);
+            }
+            catch (Exception ex)
+            {
+                throw new TemplateReaderException($"Encountered file parsing error in the template file {str}. Could not parse file.", ex);
+            }
+
+            TemplateElement templateElement = new TemplateElement()
+            { 
+                FilePath = new FileInfo(str).Name,
+                Content = textParser.JoinString(Environment.NewLine, templateLines),
+            };
+
+            _object = new Template(templateElement, str);
+
+            ReadTemplateElementsRecursively(templateElement.FilePath, str);
+            try
+            {
+                templateValidator.Validate(_object);
                 return _object;
-            else
-                throw new TemplateReaderException("");
+            }
+            catch (Exception ex)
+            {
+                throw new TemplateReaderException($"Error validating the template {str}.", ex);
+            }
         }
 
+        // Pass in the RELATIVE path to the root template file
         private void ReadTemplateElementsRecursively(string filePath, string originalFile)
         {
-            if (filePath.Contains(Directory.GetCurrentDirectory()))
-                filePath = Path.GetRelativePath(Directory.GetCurrentDirectory(), filePath);
-
-            List<string> templateLines = new List<string>();
+            List<string> templateLines;
 
             // If something goes wrong while reading in the file we need to be sure to tell the user what template has the problem.
             try
             {
-                templateLines = textParser.ParseFile(filePath);
+                templateLines = textParser.ParseFile(Path.Join(_object.rootTemplatePath, filePath));
             }
             catch (Exception ex)
             {
@@ -72,15 +93,17 @@ namespace ParseciniLibrary.Parsing
 
             // If we haven't already added this template to the Template _object, we need to add it and search it for children.
             // If it's already in the list we don't have to do anything.
-            if (!(_object is object) || !_object.TemplateElements.ContainsKey(filePath))
+            // If there's only one TemplateElement in the Template we know we're processing the root template, so we still want to grab
+            // The children.
+            if (!_object.TemplateElements.ContainsKey(filePath) || _object.TemplateElements.Count == 1)
             {
-                TemplateElement templateElement = new TemplateElement()
-                { FilePath = filePath, Content = textParser.JoinString(Environment.NewLine, templateLines) };
+                if (!_object.TemplateElements.ContainsKey(filePath))
+                {
+                    TemplateElement templateElement = new TemplateElement()
+                    { FilePath = filePath, Content = textParser.JoinString(Environment.NewLine, templateLines) };
 
-                if (!(_object is object))
-                    _object = new Template(templateElement);
-                else
                     _object.TemplateElements.Add(filePath, templateElement);
+                }
 
                 IList<string> getChildren = ReadTemplatePathsFromStringList(templateLines, filePath);
 
@@ -98,7 +121,7 @@ namespace ParseciniLibrary.Parsing
         private IList<string> ReadTemplatePathsFromStringList(List<string> stringList, string filePath)
         {
             List<string> results = new List<string>();
-            string fileDirectory = Path.GetDirectoryName(filePath);
+            string fileDirectory = _object.rootTemplatePath;
 
             foreach (string str in stringList)
             {
@@ -112,8 +135,10 @@ namespace ParseciniLibrary.Parsing
                     fileNameSubString = fileNameSubString.Remove(0, 1);
 
                     // strip out any leading back or forward slashes
-                    while (fileNameSubString.Length > 0 && (fileNameSubString[0] == '\\' || fileNameSubString[0] == '/'))
-                        fileNameSubString = fileNameSubString.Remove(0, 1);
+                    if (fileNameSubString[0] == '\\' ||
+                        fileNameSubString[0] == '/' ||
+                        fileNameSubString[0] == '.')
+                        throw new TemplateReaderException($"Please do not start template links with periods '.', forward slashes '/' or back slashes '\\'. Error found for {fileNameSubString} in {filePath}.");
 
                     // A valid result will have at least x.{fileExtension} as characters. Anything less than this won't be valid.
                     if (fileNameSubString.Length < 2 + templateFileExtension.Length || string.IsNullOrEmpty(fileNameSubString))
@@ -121,10 +146,7 @@ namespace ParseciniLibrary.Parsing
                         throw new TemplateReaderException($"Invalid filename {fileNameSubString} in {filePath}.");
                     }
 
-                    if (!fileNameSubString.Contains(fileDirectory))
-                        fileNameSubString = Path.Join(fileDirectory, fileNameSubString);
-
-                    string fullFilePath = Path.Join(Directory.GetCurrentDirectory(), fileNameSubString);
+                    string fullFilePath = Path.Join(fileDirectory, fileNameSubString);
 
                     if (new FileInfo(fullFilePath).Extension != $".{templateFileExtension}")
                     {

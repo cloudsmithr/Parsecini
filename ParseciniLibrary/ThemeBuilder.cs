@@ -10,6 +10,7 @@ using System.IO;
 using ParseciniLibrary.Exceptions;
 using ParseciniLibrary.Validator;
 using ParseciniLibrary.Common.Parsing;
+using System.Text;
 
 namespace ParseciniLibrary
 {
@@ -17,6 +18,7 @@ namespace ParseciniLibrary
     {
         public IConfigurationRoot myConfig { get; }
         private Template Template;
+
         public ThemeBuilder()
         {
             IConfigurationBuilder builder = new ConfigurationBuilder();
@@ -27,21 +29,21 @@ namespace ParseciniLibrary
             Log.LogFileName = myConfig["LogSettings:LogFileName"];
         }
 
-        public void SetTemplate(string rootTemplatePath)
+        public void SetTemplate(string rootTemplateAbsolutePath)
         {
             Log.BeginLogging();
 
-            Log.EndLogging();
-
-            if (File.Exists(rootTemplatePath))
+            if (File.Exists(rootTemplateAbsolutePath))
             {
                 try
                 {
-                    ProcessTemplateFile(rootTemplatePath);
+                    ProcessTemplateFile(rootTemplateAbsolutePath);
                 }
                 catch (Exception ex)
                 {
-                    Log.LogFile(ex.ToString());
+                    Log.LogFile($"There was an error parsing the template file. The error found was: {ex}");
+                    Log.EndLogging();
+                    throw;
                 }
             }
             else
@@ -93,14 +95,14 @@ namespace ParseciniLibrary
             Log.EndLogging();
         }
 
-        private void ProcessTemplateFile(string templateFilePath)
+        private void ProcessTemplateFile(string templateFileAbsolutePath)
         {
-            Log.LogFile($"Beginning to process file: {templateFilePath}");
+            Log.LogFile($"Beginning to process file: {templateFileAbsolutePath}");
 
             string templateFileExtension = myConfig["FileSettings:TemplateFileExtension"];
 
             TemplateReader templateReader = new TemplateReader(new TemplateValidator(), new FileParser(templateFileExtension), templateFileExtension);
-            Template = templateReader.ReadObjectFromString(templateFilePath);
+            Template = templateReader.ReadObjectFromString(templateFileAbsolutePath);
         }
 
         private void ProcessMarkdownFile(string markdownFilePath)
@@ -115,9 +117,16 @@ namespace ParseciniLibrary
             MarkdownReader markdownReader = new MarkdownReader(myConfig, "MarkdownElements", new MarkdownElementValidator(new MarkdownTagValidator(), new HTMLTagValidator()));
 
             FileParser markdownFileParser = new FileParser(markdownFileExtension);
-            IList<MarkdownElement> elements = ProcessObjectListFile(markdownFilePath, markdownFileParser, markdownReader);
+            WriteMarkdownToTemplate(ProcessObjectListFile(markdownFilePath, markdownFileParser, markdownReader));
+        }
 
-            // Need to continue here, merging the Template and the markdownfile(s), and writing them to the output folder
+        private void WriteMarkdownToTemplate(IList<MarkdownElement> markdownElements)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            stringBuilder.Append(Template.WriteMe());
+
+
         }
 
         private IList<T> ProcessObjectListFile<T>(string filePath, ITextParser fileParser, IObjectListReader<T> objectReader)

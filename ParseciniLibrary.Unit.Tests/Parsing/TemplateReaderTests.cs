@@ -26,7 +26,7 @@ namespace ParseciniLibrary.Unit.Tests.Parsing
 
             templateReader.Should().NotBeNull();
 
-            Template resultTemplate = templateReader.ReadObjectFromString("\\TestData\\Themes\\Valid\\testTheme.tpl");
+            Template resultTemplate = templateReader.ReadObjectFromString(Directory.GetCurrentDirectory() + "\\TestData\\Themes\\Valid\\testTheme.tpl");
 
             resultTemplate.Should().NotBeNull();
             resultTemplate.Should().BeEquivalentTo(GetExpectedTemplate());
@@ -45,7 +45,7 @@ namespace ParseciniLibrary.Unit.Tests.Parsing
 
             templateReader.Should().NotBeNull();
 
-            var fn = () => templateReader.ReadObjectFromString("\\TestData\\Themes\\Invalid\\BrokenFileReference.tpl");
+            var fn = () => templateReader.ReadObjectFromString(Directory.GetCurrentDirectory() + "\\TestData\\Themes\\Invalid\\BrokenFileReference.tpl");
             fn.Should().ThrowExactly<TemplateReaderException>();
         }
 
@@ -62,7 +62,7 @@ namespace ParseciniLibrary.Unit.Tests.Parsing
 
             templateReader.Should().NotBeNull();
 
-            var fn = () => templateReader.ReadObjectFromString("\\TestData\\Themes\\Invalid\\ReferenceWrongFileExtension.tpl");
+            var fn = () => templateReader.ReadObjectFromString(Directory.GetCurrentDirectory() + "\\TestData\\Themes\\Invalid\\ReferenceWrongFileExtension.tpl");
             fn.Should().ThrowExactly<TemplateReaderException>();
         }
 
@@ -79,7 +79,7 @@ namespace ParseciniLibrary.Unit.Tests.Parsing
 
             templateReader.Should().NotBeNull();
 
-            var fn = () => templateReader.ReadObjectFromString("\\TestData\\Themes\\Invalid\\InvalidFileName1.tpl");
+            var fn = () => templateReader.ReadObjectFromString(Directory.GetCurrentDirectory() + "\\TestData\\Themes\\Invalid\\InvalidFileName1.tpl");
             fn.Should().ThrowExactly<TemplateReaderException>();
         }
 
@@ -96,7 +96,58 @@ namespace ParseciniLibrary.Unit.Tests.Parsing
 
             templateReader.Should().NotBeNull();
 
-            var fn = () => templateReader.ReadObjectFromString("\\TestData\\Themes\\Invalid\\InvalidFileName2.tpl");
+            var fn = () => templateReader.ReadObjectFromString(Directory.GetCurrentDirectory() + "\\TestData\\Themes\\Invalid\\InvalidFileName2.tpl");
+            fn.Should().ThrowExactly<TemplateReaderException>();
+        }
+
+        [TestMethod]
+        public void TemplateReaderReadObjectFromStringInvalidFileName3()
+        {
+            FileParser testParser = new FileParser(".tpl");
+            testParser.Should().NotBeNull();
+
+            TemplateValidator templateValidator = new();
+
+
+            TemplateReader templateReader = new TemplateReader(templateValidator, testParser, ".tpl");
+
+            templateReader.Should().NotBeNull();
+
+            var fn = () => templateReader.ReadObjectFromString(Directory.GetCurrentDirectory() + "\\TestData\\Themes\\Invalid\\InvalidFileName3.tpl");
+            fn.Should().ThrowExactly<TemplateReaderException>();
+        }
+
+        [TestMethod]
+        public void TemplateReaderReadObjectFromStringInvalidFileName4()
+        {
+            FileParser testParser = new FileParser(".tpl");
+            testParser.Should().NotBeNull();
+
+            TemplateValidator templateValidator = new();
+
+
+            TemplateReader templateReader = new TemplateReader(templateValidator, testParser, ".tpl");
+
+            templateReader.Should().NotBeNull();
+
+            var fn = () => templateReader.ReadObjectFromString(Directory.GetCurrentDirectory() + "\\TestData\\Themes\\Invalid\\InvalidFileName4.tpl");
+            fn.Should().ThrowExactly<TemplateReaderException>();
+        }
+
+        [TestMethod]
+        public void TemplateReaderReadObjectFromStringInvalidFileName5()
+        {
+            FileParser testParser = new FileParser(".tpl");
+            testParser.Should().NotBeNull();
+
+            TemplateValidator templateValidator = new();
+
+
+            TemplateReader templateReader = new TemplateReader(templateValidator, testParser, ".tpl");
+
+            templateReader.Should().NotBeNull();
+
+            var fn = () => templateReader.ReadObjectFromString(Directory.GetCurrentDirectory() + "\\TestData\\Themes\\Invalid\\InvalidFileName5.tpl");
             fn.Should().ThrowExactly<TemplateReaderException>();
         }
 
@@ -104,33 +155,33 @@ namespace ParseciniLibrary.Unit.Tests.Parsing
         {
             TemplateElement rootElement = new TemplateElement()
             {
-                FilePath = "\\TestData\\Themes\\Valid\\testTheme.tpl",
-                Content = "(tpl)[/headerTemplate.tpl](tpl)[/bodyTemplate.tpl]"
+                FilePath = "testTheme.tpl",
+                Content = "(tpl)[headerTemplate.tpl](tpl)[bodyTemplate.tpl]"
             };
 
-            Template result = new Template(rootElement);
-            result.TemplateElements.Add("\\TestData\\Themes\\Valid\\headerTemplate.tpl",
+            Template result = new Template(rootElement, Directory.GetCurrentDirectory() + "\\TestData\\Themes\\Valid\\testTheme.tpl");
+            result.TemplateElements.Add("headerTemplate.tpl",
                         new TemplateElement()
                         {
-                            FilePath = "\\TestData\\Themes\\Valid\\headerTemplate.tpl",
+                            FilePath = "headerTemplate.tpl",
                             Content = "(tpl)[iconsTemplate.tpl](tpl)[metaTagsTemplate.tpl]"
                         });
-            result.TemplateElements.Add("\\TestData\\Themes\\Valid\\iconsTemplate.tpl",
+            result.TemplateElements.Add("iconsTemplate.tpl",
                         new TemplateElement()
                         {
-                            FilePath = "\\TestData\\Themes\\Valid\\iconsTemplate.tpl",
+                            FilePath = "iconsTemplate.tpl",
                             Content = ""
                         });
-            result.TemplateElements.Add("\\TestData\\Themes\\Valid\\metaTagsTemplate.tpl",
+            result.TemplateElements.Add("metaTagsTemplate.tpl",
                         new TemplateElement()
                         {
-                            FilePath = "\\TestData\\Themes\\Valid\\metaTagsTemplate.tpl",
+                            FilePath = "metaTagsTemplate.tpl",
                             Content = "META"
                         });
-            result.TemplateElements.Add("\\TestData\\Themes\\Valid\\bodyTemplate.tpl",
+            result.TemplateElements.Add("bodyTemplate.tpl",
                         new TemplateElement()
                         {
-                            FilePath = "\\TestData\\Themes\\Valid\\bodyTemplate.tpl",
+                            FilePath = "bodyTemplate.tpl",
                             Content = "(CONTENT)"
                         });
 
