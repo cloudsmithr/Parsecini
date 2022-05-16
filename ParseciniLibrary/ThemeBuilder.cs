@@ -18,6 +18,9 @@ namespace ParseciniLibrary
     {
         public IConfigurationRoot myConfig { get; }
         private Template Template;
+        private string OutputFolder = "";
+        private string OriginalFileName = "";
+        private string OriginalFileExtension = "";
 
         public ThemeBuilder()
         {
@@ -52,6 +55,14 @@ namespace ParseciniLibrary
                 throw new ThemeBuilderException("Could not find any files with the requested file extension at the given path.");
             }
             Log.EndLogging();
+        }
+
+        public void SetOutputFolder(string outputFolder)
+        {
+            if(!Directory.Exists(outputFolder))
+                Directory.CreateDirectory(outputFolder);
+
+            OutputFolder = outputFolder;
         }
 
         public void Process(string path, string fileExtension)
@@ -107,6 +118,9 @@ namespace ParseciniLibrary
 
         private void ProcessMarkdownFile(string markdownFilePath)
         {
+            OriginalFileName = Path.GetFileName(markdownFilePath);
+            OriginalFileExtension = Path.GetExtension(markdownFilePath);
+
             if (Template == null)
                 throw new Exception("Cannot process a MarkdownFile without a valid Template set.");
 
@@ -120,13 +134,17 @@ namespace ParseciniLibrary
             WriteMarkdownToTemplate(ProcessObjectListFile(markdownFilePath, markdownFileParser, markdownReader));
         }
 
-        private void WriteMarkdownToTemplate(IList<MarkdownElement> markdownElements)
+        private async void WriteMarkdownToTemplate(IList<MarkdownElement> markdownElements)
         {
             StringBuilder stringBuilder = new StringBuilder();
+            MarkdownWriter markdownWriter = new MarkdownWriter(markdownElements);
 
+            // We assemble our template
             stringBuilder.Append(Template.WriteMe());
+            // Then replace the Content string with the content of our markdown file
+            stringBuilder.Replace("(Content)", markdownWriter.WriteMe());
 
-
+            await File.WriteAllTextAsync(Path.Join(OutputFolder, OriginalFileName.Replace(OriginalFileExtension, ".html")), stringBuilder.ToString());
         }
 
         private IList<T> ProcessObjectListFile<T>(string filePath, ITextParser fileParser, IObjectListReader<T> objectReader)

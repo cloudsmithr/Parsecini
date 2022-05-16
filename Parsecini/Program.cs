@@ -33,6 +33,8 @@ namespace Parsecini
             TESTSUPPORT.WriteTestDirectory("inputFolder");
             TESTSUPPORT.WriteTestDirectory("outputFolder");
 
+            ThemeBuilder.SetTemplate(dirPath + "/TestData/testTheme.tpl");
+            ThemeBuilder.SetOutputFolder(dirPath + "/outputFolder");
             ThemeBuilder.Process(dirPath + "/TestData/test01.mdt", ".mdt");
 
             while (programFlow.CurrentPart.myType != FlowPart.FlowPartType.Quit)
