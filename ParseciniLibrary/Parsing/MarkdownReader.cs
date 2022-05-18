@@ -124,8 +124,8 @@ namespace ParseciniLibrary.Parsing
                             // We are dealing with a text line.
                             if (isProcessingTag)
                             {
-                                // If we are processing a tag we should add the string to the content
-                                contentStringBuilder.Append(s);
+                                // If we are processing a tag we should add the string to the content with a newline character
+                                contentStringBuilder.Append(Environment.NewLine + s);
                             }
                             else
                             {
@@ -134,6 +134,13 @@ namespace ParseciniLibrary.Parsing
                             }
                         }
                     }
+                }
+                else
+                {
+                    // If we're processing a tag and have an empty line, we want to preserve that newline since we might want to replace it
+                    // with a <br /> tag later on.
+                    if (isProcessingTag)
+                        contentStringBuilder.Append(Environment.NewLine);
                 }
 
                 lineCounter++;

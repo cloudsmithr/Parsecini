@@ -17,9 +17,11 @@ namespace Parsecini
             string outputDirectory = "";
             string headerFilepath = "";
 
+            int windowWidth = Console.WindowWidth;
+
             ProgramFlowParts programFlow = new ProgramFlowParts();
             InputBuilder INPUT = new InputBuilder(programFlow);
-            UIParts UI = new UIParts(Console.WindowWidth);
+            UIParts UI = new UIParts(windowWidth);
             TestSupport TESTSUPPORT = new TestSupport();
             ThemeBuilder ThemeBuilder = new ThemeBuilder();
 
@@ -40,7 +42,7 @@ namespace Parsecini
             while (programFlow.CurrentPart.myType != FlowPart.FlowPartType.Quit)
             {
                 string[] getDirectories = Directory.GetDirectories(dirPath);
-                UI.UpdateWidth(Console.WindowWidth);
+                UI.UpdateWidth(windowWidth);
                 switch (programFlow.CurrentPart.myType)
                 {
                     case FlowPart.FlowPartType.MainMenu:

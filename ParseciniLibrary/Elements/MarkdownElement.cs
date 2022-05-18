@@ -17,6 +17,7 @@ namespace ParseciniLibrary.Elements
         public string htmlOpenSymbol { get; set; }
         public string htmlCloseSymbol { get; set; }
         public string Content { get; set; }
+        public bool replaceNewlineWithBR { get; set; }
 
         public string ReturnAsHtml()
         {
@@ -37,6 +38,7 @@ namespace ParseciniLibrary.Elements
             element.htmlOpenSymbol = htmlOpenSymbol;
             element.htmlCloseSymbol = htmlCloseSymbol;
             element.Content = Content;
+            element.replaceNewlineWithBR = replaceNewlineWithBR;
 
             return element;
         }

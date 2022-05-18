@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Parsecini", "Parsecini\Pars
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParseciniLibrary", "ParseciniLibrary\ParseciniLibrary.csproj", "{2DE20DC3-3907-46E1-86F3-94E16F7372D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParseciniLibrary.Unit.Tests", "ParseciniLibrary.Unit.Tests\ParseciniLibrary.Unit.Tests.csproj", "{A4F7C721-8DA5-424C-8941-55F7227B37AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParseciniLibrary.Unit.Tests", "ParseciniLibrary.Unit.Tests\ParseciniLibrary.Unit.Tests.csproj", "{A4F7C721-8DA5-424C-8941-55F7227B37AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,7 +26,6 @@ Global
 		{A4F7C721-8DA5-424C-8941-55F7227B37AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A4F7C721-8DA5-424C-8941-55F7227B37AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4F7C721-8DA5-424C-8941-55F7227B37AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A4F7C721-8DA5-424C-8941-55F7227B37AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

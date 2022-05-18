@@ -33,6 +33,9 @@ namespace ParseciniLibrary.Parsing
                     }
                     else if (!string.IsNullOrWhiteSpace(markdownElement.htmlCloseSymbol))
                     {
+                        if (markdownElement.replaceNewlineWithBR)
+                            markdownElement.Content = markdownElement.Content.Replace(Environment.NewLine, "<br/>");
+
                         stringBuilder.Append(markdownElement.htmlOpenSymbol);
                         stringBuilder.Append(markdownElement.Content);
                         stringBuilder.Append(markdownElement.htmlCloseSymbol);

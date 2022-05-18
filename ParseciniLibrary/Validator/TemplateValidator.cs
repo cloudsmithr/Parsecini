@@ -46,7 +46,7 @@ namespace ParseciniLibrary.Validator
                     }
                     else
                     {
-                        Log.LogFile($"Successfully validate template branch: {templateBranchString}");
+                        Log.LogFile($"Successfully validate template branch: {templateBranchString} for theme {entry.Value.FilePath}");
                     }
                 }
             }

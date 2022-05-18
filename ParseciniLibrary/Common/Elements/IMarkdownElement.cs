@@ -8,8 +8,9 @@ namespace ParseciniLibrary.Common.Elements
         public string markdownCloseSymbol { get; }
         public string htmlOpenSymbol { get; }
         public string htmlCloseSymbol { get; }
-
         public string Content { get; set; }
+        public bool replaceNewlineWithBR { get; set; }
+
         public string ReturnAsHtml();
         public string ReturnAsMarkdown();
 
