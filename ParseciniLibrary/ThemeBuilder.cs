@@ -22,6 +22,8 @@ namespace ParseciniLibrary
         private string OutputFolder = "";
         private string OriginalFileName = "";
         private string OriginalFileExtension = "";
+        public Dictionary<string, string> WebsiteVariables = new Dictionary<string, string>();
+        private Dictionary<string, string> TemplateVariables = new Dictionary<string, string>();
 
         public ThemeBuilder(IConfigurationRoot config)
         {
@@ -127,7 +129,27 @@ namespace ParseciniLibrary
             MarkdownReader markdownReader = new MarkdownReader(myConfig, "MarkdownElements", new MarkdownElementValidator(new MarkdownTagValidator(), new HTMLTagValidator()));
 
             FileParser markdownFileParser = new FileParser(markdownFileExtension);
-            WriteMarkdownToTemplate(ProcessObjectListFile(markdownFilePath, markdownFileParser, markdownReader));
+            List<string> results = markdownFileParser.ParseFile(markdownFilePath);
+            List<string> clearedList = new List<string>();
+            
+            TemplateVariables.Clear();
+
+            foreach (string s in results)
+            {
+                if (s.StartsWith("{var}"))
+                {
+                    string substring = s.Remove(0, 5);
+                    substring = substring.Replace("{", "").Replace("}", "");
+                    string[] holder = substring.Split('=');
+                    TemplateVariables.Add(holder[0], holder[1]);
+                }
+                else
+                {
+                    clearedList.Add(s);
+                }
+            }
+
+            WriteMarkdownToTemplate(ProcessObjectListFile(clearedList, markdownReader));
         }
 
         private async void WriteMarkdownToTemplate(IList<MarkdownElement> markdownElements)
@@ -140,14 +162,22 @@ namespace ParseciniLibrary
             // Then replace the Content string with the content of our markdown file
             stringBuilder.Replace("(Content)", markdownWriter.WriteMe());
 
+            foreach (KeyValuePair<string, string> s in WebsiteVariables)
+            {
+                stringBuilder.Replace($"{{{s.Key}}}", s.Value);
+            }
+
+            foreach (KeyValuePair<string, string> s in TemplateVariables)
+            {
+                stringBuilder.Replace($"{{{s.Key}}}", s.Value);
+            }
+
             await File.WriteAllTextAsync(Path.Join(OutputFolder, OriginalFileName.Replace(OriginalFileExtension, ".html")), stringBuilder.ToString());
         }
 
-        private IList<T> ProcessObjectListFile<T>(string filePath, ITextParser fileParser, IObjectListReader<T> objectReader)
+        private IList<T> ProcessObjectListFile<T>(List<string> lines, IObjectListReader<T> objectReader)
         {
-            List<string> results = fileParser.ParseFile(filePath);
-
-            IList<T> readResults = objectReader.ReadObjectsFromStringList(results);
+            IList<T> readResults = objectReader.ReadObjectsFromStringList(lines);
 
             return readResults;
         }

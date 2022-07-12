@@ -2,3 +2,4 @@
 [text]
 Check it out ma this is the homepage!
 [/text]
+{var}title=Home

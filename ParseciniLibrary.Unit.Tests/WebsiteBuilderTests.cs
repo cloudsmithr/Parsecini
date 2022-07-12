@@ -15,7 +15,7 @@ namespace ParseciniLibrary.Unit.Tests
         [TestMethod]
         public void WebsiteBuilderConstructorSuccess()
         {
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "TestData/TestWebsite1");
+            string filePath = Path.Join(Directory.GetCurrentDirectory(), "TestData/TestWebsite1");
             WebsiteBuilder testWebsiteBuilder = new WebsiteBuilder(filePath);
 
             testWebsiteBuilder.Website.Name.Should().Be("TestWebsite");
@@ -33,7 +33,7 @@ namespace ParseciniLibrary.Unit.Tests
         [TestMethod]
         public void WebsiteBuilderProcessSuccess()
         {
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "TestData/TestWebsite1");
+            string filePath = Path.Join(Directory.GetCurrentDirectory(), "TestData/TestWebsite1");
             WebsiteBuilder testWebsiteBuilder = new WebsiteBuilder(filePath);
 
             testWebsiteBuilder.ProcessSite().Should().Be(true);

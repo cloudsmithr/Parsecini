@@ -40,7 +40,7 @@ namespace ParseciniLibrary.Logging
 
         private static void FlushLog()
         {
-            File.AppendAllText(Path.Combine(LogPath, LogFileName), stringBuilder.ToString());
+            File.AppendAllText(Path.Join(LogPath, LogFileName), stringBuilder.ToString());
             stringBuilder.Clear();
         }
 

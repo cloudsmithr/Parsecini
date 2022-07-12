@@ -26,9 +26,9 @@ namespace ParseciniLibrary
             
             myConfig = builder.Build();
 
-            Log.LogPath = Path.Combine(Directory.GetCurrentDirectory(), myConfig["LogSettings:LogFolder"]);
             Log.LogFileName = myConfig["LogSettings:LogFileName"];
-            outputFolder = Path.Combine(Directory.GetCurrentDirectory(), myConfig["FileSettings:OutputFolder"]);
+            Log.LogPath = Path.Join(Directory.GetCurrentDirectory(), myConfig["LogSettings:LogFolder"]);
+            outputFolder = Path.Join(Directory.GetCurrentDirectory(), myConfig["FileSettings:OutputFolder"]);
 
             WebsiteFolder = websiteFolder;
             
@@ -46,6 +46,8 @@ namespace ParseciniLibrary
             }
 
             ThemeBuilder = new ThemeBuilder(myConfig);
+            ThemeBuilder.WebsiteVariables.Add("sitename", Website.Name);
+            ThemeBuilder.WebsiteVariables.Add("navigation", BuildNavigationList(Website.Pages, Website.Navigation));
         }
 
         public bool ProcessSite()
@@ -75,6 +77,18 @@ namespace ParseciniLibrary
             {
                 return false;
             }
+        }
+
+        private string BuildNavigationList(List<Page> pages, Navigation nav)
+        {
+            string navigationString = "";
+            foreach(Page p in pages)
+            {
+                navigationString += nav.OpenTag.Replace("{url}", p.Url);
+                navigationString += p.Title;
+                navigationString += nav.CloseTag;
+            }
+            return navigationString;
         }
     }
 }
