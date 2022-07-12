@@ -23,8 +23,7 @@ namespace Parsecini
             InputBuilder INPUT = new InputBuilder(programFlow);
             UIParts UI = new UIParts(windowWidth);
             TestSupport TESTSUPPORT = new TestSupport();
-            ThemeBuilder ThemeBuilder = new ThemeBuilder();
-
+            WebsiteBuilder WebsiteBuilder = new WebsiteBuilder(dirPath + "/TestData/TestWebsite1/");
 
             TESTSUPPORT.WriteTestFile("test1", ".thm");
             TESTSUPPORT.WriteTestFile("test2", ".thm");
@@ -34,10 +33,6 @@ namespace Parsecini
             TESTSUPPORT.WriteTestFile("bendigo", ".hed");
             TESTSUPPORT.WriteTestDirectory("inputFolder");
             TESTSUPPORT.WriteTestDirectory("outputFolder");
-
-            ThemeBuilder.SetTemplate(dirPath + "/TestData/testTheme.tpl");
-            ThemeBuilder.SetOutputFolder(dirPath + "/outputFolder");
-            ThemeBuilder.Process(dirPath + "/TestData/test01.mdt", ".mdt");
 
             while (programFlow.CurrentPart.myType != FlowPart.FlowPartType.Quit)
             {

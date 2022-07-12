@@ -36,7 +36,9 @@ namespace ParseciniLibrary.Validator
                 Log.LogFile("A MarkdownElement's htmlOpenSymbol cannot be empty or whitespace.");
             }
             if (string.IsNullOrWhiteSpace(validationObject.htmlCloseSymbol) 
-                && !(validationObject.htmlOpenSymbol.Contains("{Content}") || validationObject.htmlOpenSymbol[validationObject.htmlOpenSymbol.Length - 2] == '/'))
+                && !(
+                (validationObject.htmlOpenSymbol.Contains("{Content}") || validationObject.htmlOpenSymbol.Contains("{content}"))
+                || validationObject.htmlOpenSymbol[validationObject.htmlOpenSymbol.Length - 2] == '/'))
             {
                 valid = false;
                 Log.LogFile("If no htmlCloseSymbol is specified the htmlOpenSymbol must either contain a self-closing forward slash '/' or the string '{content}'.");

@@ -11,6 +11,7 @@ using ParseciniLibrary.Exceptions;
 using ParseciniLibrary.Validator;
 using ParseciniLibrary.Common.Parsing;
 using System.Text;
+using Dawn;
 
 namespace ParseciniLibrary
 {
@@ -22,19 +23,14 @@ namespace ParseciniLibrary
         private string OriginalFileName = "";
         private string OriginalFileExtension = "";
 
-        public ThemeBuilder()
+        public ThemeBuilder(IConfigurationRoot config)
         {
-            IConfigurationBuilder builder = new ConfigurationBuilder();
-            builder.AddJsonFile("appsettings.json", false, true);
-            myConfig = builder.Build();
-
-            Log.LogPath = Path.Combine(Directory.GetCurrentDirectory(), myConfig["LogSettings:LogFolder"]);
-            Log.LogFileName = myConfig["LogSettings:LogFileName"];
+            Guard.Argument(config, nameof(config)).NotNull();
+            myConfig = config;
         }
 
         public void SetTemplate(string rootTemplateAbsolutePath)
         {
-            Log.BeginLogging();
 
             if (File.Exists(rootTemplateAbsolutePath))
             {
