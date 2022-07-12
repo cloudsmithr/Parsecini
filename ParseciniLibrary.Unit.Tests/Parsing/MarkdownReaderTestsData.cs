@@ -42,7 +42,8 @@ namespace ParseciniLibrary.Unit.Tests.Parsing
                                 markdownCloseSymbol = "",
                                 htmlOpenSymbol = "<h1>",
                                 htmlCloseSymbol = "</h1>",
-                                Content = "Sup"
+                                Content = "Sup",
+                                replaceNewlineWithBR = false
                             }
                         }
                     },
@@ -61,7 +62,8 @@ namespace ParseciniLibrary.Unit.Tests.Parsing
                                 markdownCloseSymbol = "",
                                 htmlOpenSymbol = "<h1>",
                                 htmlCloseSymbol = "</h1>",
-                                Content = ""
+                                Content = "",
+                                replaceNewlineWithBR = false
                             }
                         }
                     },
@@ -85,7 +87,8 @@ namespace ParseciniLibrary.Unit.Tests.Parsing
                                 markdownCloseSymbol = "[/text]",
                                 htmlOpenSymbol = "<p>",
                                 htmlCloseSymbol = "</p>",
-                                Content = "The end had to come.It's the truth you've always known.Time."
+                                Content = $"{Environment.NewLine}The end had to come.{Environment.NewLine}It's the truth you've always known.{Environment.NewLine}Time.",
+                                replaceNewlineWithBR = true
                             }
                         }
                     },
@@ -106,6 +109,7 @@ namespace ParseciniLibrary.Unit.Tests.Parsing
                                 markdownCloseSymbol = "[/text]",
                                 htmlOpenSymbol = "<p>",
                                 htmlCloseSymbol = "</p>",
+                                replaceNewlineWithBR = true,
                                 Content = ""
                             }
                         }
@@ -131,7 +135,8 @@ namespace ParseciniLibrary.Unit.Tests.Parsing
                                 markdownCloseSymbol = "",
                                 htmlOpenSymbol = "<h1>",
                                 htmlCloseSymbol = "</h1>",
-                                Content = "Hello"
+                                Content = "Hello",
+                                replaceNewlineWithBR = false
                             },
                             new MarkdownElement
                             {
@@ -140,7 +145,8 @@ namespace ParseciniLibrary.Unit.Tests.Parsing
                                 markdownCloseSymbol = "[/text]",
                                 htmlOpenSymbol = "<p>",
                                 htmlCloseSymbol = "</p>",
-                                Content = "The end had to come.It's the truth you've always known.Time."
+                                Content = $"{Environment.NewLine}The end had to come.{Environment.NewLine}It's the truth you've always known.{Environment.NewLine}Time.",
+                                replaceNewlineWithBR = true
                             }
                         }
                     },
@@ -166,25 +172,28 @@ namespace ParseciniLibrary.Unit.Tests.Parsing
                                 markdownCloseSymbol = "",
                                 htmlOpenSymbol = "<h1>",
                                 htmlCloseSymbol = "</h1>",
-                                Content = "Hello"
+                                Content = "Hello",
+                                replaceNewlineWithBR = false
                             },
                             new MarkdownElement
-                            {
+                            {                                
                                 name = "Paragraph1",
                                 markdownOpenSymbol = "[text]",
                                 markdownCloseSymbol = "[/text]",
                                 htmlOpenSymbol = "<p>",
                                 htmlCloseSymbol = "</p>",
-                                Content = "The end had to come.It's the truth you've always known.Time."
+                                Content = $"{Environment.NewLine}The end had to come.{Environment.NewLine}It's the truth you've always known.{Environment.NewLine}Time.",
+                                replaceNewlineWithBR = true
                             },
                             new MarkdownElement
                             {
                                 name = "Image1",
                                 markdownOpenSymbol = "+",
                                 markdownCloseSymbol = "",
-                                htmlOpenSymbol = "<img {content}>",
+                                htmlOpenSymbol = "<img {Content}>",
                                 htmlCloseSymbol = "",
-                                Content = "img/test.jpg"
+                                Content = "img/test.jpg",
+                                replaceNewlineWithBR = false
                             }
                         }
                     }

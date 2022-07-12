@@ -58,6 +58,7 @@ namespace ParseciniLibrary
             {
                 if(!p.IsBlogPage)
                     ProcessTemplate(Path.Join(WebsiteFolder, p.Markdown), Path.Join(WebsiteFolder, p.Template));
+                //TODO: we're only processing non-blog pages, now we need to add support for parsing all the blog pages, and creating the index pages based on the pagination size
             }
 
             Log.EndLogging();
