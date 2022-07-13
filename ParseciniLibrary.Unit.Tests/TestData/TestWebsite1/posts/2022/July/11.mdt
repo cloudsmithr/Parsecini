@@ -1,4 +1,9 @@
-﻿# This is the post from the 11th
+﻿{var}title=11th July Post
+{prv}previewTitle=Hello All!
+{prv}previewText=And now I will write a paragraph. A simple little paragraph!
+{prv}previewImage=https://icons.iconarchive.com/icons/paomedia/small-n-flat/256/sign-right-icon.png
+
+# This is the post from the 11th
 [text]
 And now I will write a paragraph. A simple little paragraph!
 Even with a newline!

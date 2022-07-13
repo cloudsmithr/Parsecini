@@ -22,7 +22,7 @@ namespace ParseciniLibrary.Unit.Tests
             testWebsiteBuilder.Website.Author.Should().Be("Ryan Smith");
             testWebsiteBuilder.Website.Pages.Count.Should().Be(4);
             testWebsiteBuilder.Website.Pages[0].Title.Should().Be("home");
-            testWebsiteBuilder.Website.Pages[0].Url.Should().Be("/");
+            testWebsiteBuilder.Website.Pages[0].RootUrl.Should().Be("/");
             testWebsiteBuilder.Website.Pages[0].Template.Should().Be("/templates/home.tpl");
             testWebsiteBuilder.Website.Pages[0].Markdown.Should().Be("/home.mdt");
             testWebsiteBuilder.Website.Pages[3].Posts.Should().Be("/posts/");

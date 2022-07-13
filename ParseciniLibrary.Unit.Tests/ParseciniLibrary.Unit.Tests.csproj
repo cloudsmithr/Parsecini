@@ -52,6 +52,9 @@
     <None Update="TestData\TestWebsite1\templates\about.tpl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\TestWebsite1\templates\blogPreview.tpl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\TestWebsite1\templates\blog.tpl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -97,6 +100,10 @@
     <None Update="TestData\Themes\Valid\testTheme.tpl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TestData\TestWebsite1\posts\2022\July\NewFolder\" />
   </ItemGroup>
 
 </Project>
