@@ -12,5 +12,6 @@ namespace ParseciniLibrary.Templating
         public string Author { get; set; }
         public List<Page> Pages { get; set; }
         public Navigation Navigation { get; set; }
+        public BlogNavigation BlogNavigation { get; set; }
     }
 }

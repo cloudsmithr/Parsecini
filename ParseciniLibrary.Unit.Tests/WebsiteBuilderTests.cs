@@ -27,7 +27,7 @@ namespace ParseciniLibrary.Unit.Tests
             testWebsiteBuilder.Website.Pages[0].Markdown.Should().Be("/home.mdt");
             testWebsiteBuilder.Website.Pages[3].Posts.Should().Be("/posts/");
             testWebsiteBuilder.Website.Pages[3].IsBlogPage.Should().Be(true);
-            testWebsiteBuilder.Website.Pages[3].Pagination.Should().Be(5);
+            testWebsiteBuilder.Website.Pages[3].PostsPerPage.Should().Be(2);
         }
 
         [TestMethod]

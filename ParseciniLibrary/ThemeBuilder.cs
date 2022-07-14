@@ -189,35 +189,79 @@ namespace ParseciniLibrary
             Template mainTemplate = ProcessTemplateFile(blogIndex.TemplatePath);
             Template previewTemplate = ProcessTemplateFile(blogIndex.PreviewTemplatePath);
 
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append(Template.WriteMe());
+            int numPages = (int)Math.Ceiling((float)blogIndex.Posts.Count / (float)blogIndex.PostsPerPage);
 
-            foreach (KeyValuePair<string, string> s in WebsiteVariables)
+            for (int i = 0; i < numPages; i++)
             {
-                stringBuilder.Replace($"{{{s.Key}}}", s.Value);
-            }
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.Append(mainTemplate.WriteMe());
 
-            foreach (KeyValuePair<string, string> s in TemplateVariables)
-            {
-                stringBuilder.Replace($"{{{s.Key}}}", s.Value);
-            }
-
-            StringBuilder contentBuilder = new StringBuilder();
-
-            foreach(Post post in blogIndex.Posts)
-            {
-                string previewString = previewTemplate.WriteMe();
-
-                foreach (KeyValuePair<string, string> s in post.Variables)
+                foreach (KeyValuePair<string, string> s in WebsiteVariables)
                 {
-                    previewString = previewString.Replace($"{{{s.Key}}}", s.Value);
+                    stringBuilder.Replace($"{{{s.Key}}}", s.Value);
                 }
 
-                contentBuilder.Append(previewString);
+                foreach (KeyValuePair<string, string> s in TemplateVariables)
+                {
+                    stringBuilder.Replace($"{{{s.Key}}}", s.Value);
+                }
+
+                StringBuilder contentBuilder = new StringBuilder();
+
+                //foreach (Post post in blogIndex.Posts)
+                for(int j = blogIndex.PostsPerPage * i; j < blogIndex.PostsPerPage * (i + 1); j++)
+                {
+                    if (j < blogIndex.Posts.Count)
+                    {
+                        string previewString = previewTemplate.WriteMe();
+
+                        foreach (KeyValuePair<string, string> s in blogIndex.Posts[j].Variables)
+                        {
+                            previewString = previewString.Replace($"{{{s.Key}}}", s.Value);
+                        }
+
+                        contentBuilder.Append(previewString);
+                    }
+                }
+
+                if(numPages > 1)
+                {
+                    if (i == 0)
+                    {
+                        contentBuilder.Append(blogIndex.BlogNavigation.WriteMe(
+                            nextPageUrl: blogIndex.IndexUrl(i + 2),
+                            lastPageUrl: blogIndex.IndexUrl(numPages)));
+                    }
+                    else if (i == numPages - 1)
+                    {
+                        contentBuilder.Append(blogIndex.BlogNavigation.WriteMe(
+                            firstPageUrl: blogIndex.Url,
+                            prevPageUrl: blogIndex.IndexUrl(numPages - 1)));
+                    }
+                    else if (i - 1 == 0)
+                    {
+                        contentBuilder.Append(blogIndex.BlogNavigation.WriteMe(
+                            firstPageUrl: blogIndex.Url,
+                            prevPageUrl: blogIndex.Url,
+                            nextPageUrl: blogIndex.IndexUrl(i + 2),
+                            lastPageUrl: blogIndex.IndexUrl(numPages)));
+                    }
+                    else
+                    {
+                        contentBuilder.Append(blogIndex.BlogNavigation.WriteMe(
+                            firstPageUrl: blogIndex.Url,
+                            prevPageUrl: blogIndex.IndexUrl(i),
+                            nextPageUrl: blogIndex.IndexUrl(i + 2),
+                            lastPageUrl: blogIndex.IndexUrl(numPages)));
+                    }
+                }
+
+                stringBuilder.Replace("(Content)", contentBuilder.ToString());
+                if (i == 0)
+                    await File.WriteAllTextAsync(Path.Join(OutputFolder, path), stringBuilder.ToString());
+                else
+                    await File.WriteAllTextAsync(Path.Join(OutputFolder, path.Replace(".html", $"{i+1}.html")), stringBuilder.ToString());
             }
-            
-            stringBuilder.Replace("(Content)", contentBuilder.ToString());
-            await File.WriteAllTextAsync(Path.Join(OutputFolder, path), stringBuilder.ToString());
         }
 
         public void SetPostVariableDictionary(Dictionary<string, string> variableDictionary)

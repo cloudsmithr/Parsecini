@@ -61,19 +61,28 @@ namespace ParseciniLibrary
                 if (!p.IsBlogPage)
                     ProcessTemplate(Path.Join(WebsiteFolder, p.Markdown), Path.Join(WebsiteFolder, p.Template), outputFolderRoot);
                 else
-                    ProcessBlogPosts(p.Title, p.RootUrl, p.Template, p.Posts, p.Pagination, p.PreviewTemplate);
+                    ProcessBlogPosts(p);
             }
 
             Log.EndLogging();
             return true;
         }
 
-        private void ProcessBlogPosts(string title, string rooturl, string templatePath, string posts, int pagination, string previewTemplate)
+        private void ProcessBlogPosts(Page p)
         {
+            string title = p.Title;
+            string rooturl = p.RootUrl;
+            string templatePath = p.Template;
+            string posts = p.Posts;
+            string previewTemplate = p.PreviewTemplate;
+
             BlogIndex blogIndex = new BlogIndex();
 
             blogIndex.TemplatePath = Path.Join(WebsiteFolder, templatePath);
             blogIndex.PreviewTemplatePath = Path.Join(WebsiteFolder, previewTemplate);
+            blogIndex.PostsPerPage = p.PostsPerPage;
+            blogIndex.BlogNavigation = Website.BlogNavigation;
+            blogIndex.Url = new Uri($"{Path.Join(outputFolderRoot, p.RootUrl, p.Title)}.html").ToString();
 
             string postsPath = Path.Join(WebsiteFolder, posts);
 

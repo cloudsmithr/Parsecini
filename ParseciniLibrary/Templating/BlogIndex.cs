@@ -10,8 +10,14 @@ namespace ParseciniLibrary.Templating
     {
         public List<Post> Posts = new List<Post>();
         public int PostsPerPage { get; set; }
-        public int MaxPageLinksPerPage { get; set; }
         public string TemplatePath { get; set; }
         public string PreviewTemplatePath { get; set; }
+        public BlogNavigation BlogNavigation { get; set; }
+        public string Url { get; set; }
+
+        public string IndexUrl(int index)
+        {
+            return Url.Replace(".html", $"{index}.html");
+        }
     }
 }
