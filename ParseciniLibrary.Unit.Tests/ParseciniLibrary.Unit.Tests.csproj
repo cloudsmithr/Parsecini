@@ -102,8 +102,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="TestData\TestWebsite1\posts\2022\July\NewFolder\" />
-  </ItemGroup>
-
 </Project>
